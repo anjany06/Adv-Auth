@@ -80,5 +80,16 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.send("logout Route");
+  try {
+    res.clearCookie("token", {
+      httpOnly: true, //cookie cannot be accessed by client side js
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", //it prevents csrf attack
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.json({ success: true, message: "Logged OUT" });
+  } catch (error) {
+    return res.json({ success: false, messgae: error.message });
+  }
 };
