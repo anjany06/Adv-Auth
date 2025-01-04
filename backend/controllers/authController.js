@@ -132,13 +132,7 @@ export const sendVerifyOtp = async (req, res) => {
       text: `Your OTP is ${otp}. Verify your account using this OTP.`,
     };
 
-    await transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-      } else {
-        console.log("Verification emailEmail sent:", info.response);
-      }
-    });
+    await transporter.sendMail(mailOptions);
 
     res.json({ success: true, message: "Verification OTP sent on Email" });
   } catch (error) {
@@ -179,3 +173,50 @@ export const verifyEmail = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+//contoller to check user authentication
+export const isAuthenticated = async (req, res) => {
+  try {
+    return res.json({ success: true });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+//send password reset otp
+export const sendResetOtp = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.json({ success: false, message: "Email is required" });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: error.message });
+    }
+
+    //creating a 6 six digit otp for verfication
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    user.resetOtp = otp;
+    //otp expires in 15 minutes
+    user.resetOtpExpireAt = Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+    //send otp to user's email
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Your OTP for reset password is ${otp}. Use this OTP to proceed with resetting your password.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.json({ success: true, message: "OTP sent to your email" });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+//Reset user Password
