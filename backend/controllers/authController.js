@@ -1,6 +1,7 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import transporter from "../utils/nodemailer.js";
 
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
@@ -38,7 +39,23 @@ export const register = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // valid for 7 days
     });
 
-    res.json({ success: true, message: "New user created" });
+    //to send welcome email
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Welcome to my website",
+      text: `Hi ${name}, we're thrilled to have you here! Get ready to explore amazing features and make the most of your journey with us. Your email id is ${email} 🚀`,
+    };
+
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+
+    return res.json({ success: true, message: "New user created" });
   } catch (error) {
     return res.status(400).json({ success: false, message: error.message });
   }
