@@ -118,7 +118,7 @@ export const sendVerifyOtp = async (req, res) => {
       });
     }
     //creating a 6 six digit otp for verfication
-    const opt = String(Math.floor(100000 + Math.random() * 900000));
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
     user.verifyOtp = otp;
     //otp expires in one day
     user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
@@ -129,7 +129,7 @@ export const sendVerifyOtp = async (req, res) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Account Verification OTP",
-      text: `Your OTP is ${opt}. Verify your account using this OTP.`,
+      text: `Your OTP is ${otp}. Verify your account using this OTP.`,
     };
 
     await transporter.sendMail(mailOptions, (error, info) => {
