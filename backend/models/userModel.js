@@ -1,32 +1,41 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  email:{
+  email: {
     type: String,
-    reuired : true,
-    unique : true
+    reuired: true,
+    unique: true,
   },
-  password:{
+  password: {
     type: String,
-    required : true
+    required: true,
   },
-  name:{
-    type:String,
-    required : true
+  name: {
+    type: String,
+    required: true,
   },
-  lastLogin:{
-    type:Date,
-    default:Date.now
+  verifyOtp: {
+    type: String,
+    default: "",
   },
-  isVerified:{
+  verificationOtpExpiresAt: {
+    type: Number,
+    default: 0,
+  },
+  isAccountVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  resetPasswordToken : String,
-  resetPasswordExpiresAt : Date,
-  verificationToken: String,
-  verificationTokenExpiresAt: Date
-},{timestamps: true})
-//using timestamps : created at and updated at feilds will be automatically added into document
+  resetOtp: {
+    type: String,
+    default: "",
+  },
+  resetOtpExpiresAt: {
+    type: Number,
+    default: 0,
+  },
+});
 
-export const User =  mongoose.model("User", userSchema);
+const UserModel = mongoose.models.user || mongoose.model("User", userSchema);
+
+export default UserModel;
