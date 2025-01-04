@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import transporter from "../utils/nodemailer.js";
+import UserModel from "../models/userModel.js";
 
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
@@ -47,13 +48,7 @@ export const register = async (req, res) => {
       text: `Hi ${name}, we're thrilled to have you here! Get ready to explore amazing features and make the most of your journey with us. Your email id is ${email} 🚀`,
     };
 
-    await transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-      } else {
-        console.log("Email sent:", info.response);
-      }
-    });
+    await transporter.sendMail(mailOptions);
 
     return res.json({ success: true, message: "New user created" });
   } catch (error) {
@@ -108,5 +103,45 @@ export const logout = async (req, res) => {
     return res.json({ success: true, message: "Logged OUT" });
   } catch (error) {
     return res.json({ success: false, messgae: error.message });
+  }
+};
+
+//send verfication otp to the user's email
+export const sendVerifyOtp = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId);
+    if (user.isAccountVerified) {
+      return res.json({
+        success: false,
+        message: "Account is already verified",
+      });
+    }
+    //creating a 6 six digit otp for verfication
+    const opt = String(Math.floor(100000 + Math.random() * 900000));
+    user.verifyOtp = otp;
+    //otp expires in one day
+    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+    await user.save();
+    //send otp to user's email
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Account Verification OTP",
+      text: `Your OTP is ${opt}. Verify your account using this OTP.`,
+    };
+
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Verification emailEmail sent:", info.response);
+      }
+    });
+
+    res.json({ success: true, message: "Verification OTP sent on Email" });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
