@@ -2,7 +2,6 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import transporter from "../utils/nodemailer.js";
-import UserModel from "../models/userModel.js";
 
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
@@ -253,3 +252,4 @@ export const resetPassword = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
