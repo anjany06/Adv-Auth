@@ -12,12 +12,16 @@ export const AppContextProvider = (props) => {
 
   const getAuthState = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/auth/is-auth");
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.get(backendUrl + "/api/auth/is-auth", {
+        withCredentials: true, // Include cookies in the request
+      });
       if (data.success) {
         setIsLoggedin(true);
         getUserData();
       }
     } catch (error) {
+      console.log(error.message);
       toast.error(error.message);
     }
   };
@@ -32,8 +36,11 @@ export const AppContextProvider = (props) => {
 
   //so we have to execute this function whenever page loads
   useEffect(() => {
-    getAuthState();
-  }, []);
+    if (isLoggedin) {
+      getUserData();
+    }
+  }, [isLoggedin]);
+
   const value = {
     backendUrl,
     isLoggedin,

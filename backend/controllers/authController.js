@@ -35,7 +35,7 @@ export const register = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true, //cookie cannot be accessed by client side js
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", //it prevents csrf attack
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", //it prevents csrf attack
       maxAge: 7 * 24 * 60 * 60 * 1000, // valid for 7 days
     });
 
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true, //cookie cannot be accessed by client side js
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", //it prevents csrf attack
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", //it prevents csrf attack
       maxAge: 7 * 24 * 60 * 60 * 1000, // valid for 7 days
     });
 
@@ -252,4 +252,3 @@ export const resetPassword = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
-
