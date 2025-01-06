@@ -23,7 +23,7 @@ const EmailVerify = () => {
             .map((_, index) => (
               <input
                 type="text"
-                maxLength="0"
+                maxLength="1"
                 key={index}
                 required
                 className="w-12 h-12 bg-[#333A5C] text-wrap text-center text-xl rounded-md"
