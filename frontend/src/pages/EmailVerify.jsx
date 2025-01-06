@@ -1,6 +1,35 @@
 import React from "react";
 import { assets } from "../assets/assets";
 const EmailVerify = () => {
+  const inputRefs = React.useRef([]);
+
+  //to move the input to next input after inserting 1 number
+  const handleInput = (e, index) => {
+    if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  //to delete the number on backspace
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && e.target.value === "" && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+  // to handle paste if someone directly going to paste the otp
+  const handlePaste = (e) => {
+    //this will store the data from clipboard
+    const paste = e.clipboardData.getData("text");
+    //this will split the paste data into array of numbers
+    const pasteArray = paste.split("");
+    //this will loop through the array and focus on each input
+    pasteArray.forEach((char, index) => {
+      if (inputRefs.current[index]) {
+        //this will add each number to each input field
+        inputRefs.current[index].value = char;
+      }
+    });
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 to-purple-400">
       <img
@@ -17,7 +46,7 @@ const EmailVerify = () => {
         <p className="text-center mb-6 text-indigo-300">
           Enter the 6-digit code sent to your email id.
         </p>
-        <div className="flex justify-between mb-8">
+        <div className="flex justify-between mb-8 " onPaste={handlePaste}>
           {Array(6)
             .fill(0)
             .map((_, index) => (
@@ -26,10 +55,16 @@ const EmailVerify = () => {
                 maxLength="1"
                 key={index}
                 required
-                className="w-12 h-12 bg-[#333A5C] text-wrap text-center text-xl rounded-md"
+                className="w-12 h-12 bg-[#333A5C] text-wrap text-center text-white text-xl rounded-md"
+                ref={(e) => (inputRefs.current[index] = e)}
+                onInput={(e) => handleInput(e, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
               />
             ))}
         </div>
+        <button className="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full">
+          Verify Email
+        </button>
       </form>
     </div>
   );
