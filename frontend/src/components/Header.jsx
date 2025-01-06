@@ -3,16 +3,21 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
 
 const Header = () => {
-  const { getUserData } = useContext(AppContext);
-  const [userData, setUserData] = useState(null);
+  const { getUserData, isLoggedin, userData, } =
+    useContext(AppContext);
+  const [localUser, setLocalUser] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const data = await getUserData();
-      setUserData(data);
+      if (isLoggedin) {
+        const data = await getUserData();
+        setLocalUser(data);
+      } else {
+        setLocalUser(null);
+      }
     };
     fetchUserData();
-  }, [getUserData]);
+  }, [isLoggedin, getUserData]);
   return (
     <div className="flex flex-col items-center mt-20 px-4 text-center text-gray-800">
       <img
@@ -21,7 +26,7 @@ const Header = () => {
         className="w-36 h-36 rounded-full mb-6"
       />
       <h1 className="flex items-center gap-2 text-xl sm:text-3xl font-medium mb-2">
-        Hey {userData ? userData.name : "Developer"}!
+        Hey {localUser ? localUser.name : "Developer"}!
         <img src={assets.hand_wave} alt="" className="w-8 aspect-square" />
       </h1>
       <h2 className="text-3xl sm:text-5xl font-semibold mb-4">
