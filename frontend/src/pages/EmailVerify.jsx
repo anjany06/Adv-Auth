@@ -12,7 +12,7 @@ const EmailVerify = () => {
     useContext(AppContext);
 
   const navigate = useNavigate();
-  
+
   const inputRefs = React.useRef([]);
 
   //to move the input to next input after inserting 1 number
