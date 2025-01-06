@@ -28,16 +28,17 @@ export const AppContextProvider = (props) => {
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/data");
-      data.success ? setUserData(data.userData) : toast.error(data.message);
+      return data.userData; // Return the user data directly
     } catch (error) {
       toast.error(error.message);
+      return null; // Return null in case of an error
     }
   };
 
   //so we have to execute this function whenever page loads
   useEffect(() => {
     if (isLoggedin) {
-      getUserData();
+      getAuthState();
     }
   }, [isLoggedin]);
 

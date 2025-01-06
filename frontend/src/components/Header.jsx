@@ -1,9 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
 
 const Header = () => {
-  const { userData } = useContext(AppContext);
+  const { getUserData } = useContext(AppContext);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const data = await getUserData();
+      setUserData(data);
+    };
+    fetchUserData();
+  }, [getUserData]);
   return (
     <div className="flex flex-col items-center mt-20 px-4 text-center text-gray-800">
       <img
