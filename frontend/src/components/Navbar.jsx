@@ -3,7 +3,6 @@ import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../Context/AppContext";
-import { MdMenu } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 const Navbar = () => {
@@ -19,6 +18,24 @@ const Navbar = () => {
     };
     fetchUserData();
   }, [getUserData]);
+
+  const sendVerificationOtp = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+
+      const { data } = await axios.post(
+        backendUrl + "/api/auth/send-verify-otp"
+      );
+      if (data.success) {
+        navigate("/email-verify");
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   const logout = async () => {
     try {
       axios.defaults.withCredentials = true;
@@ -39,7 +56,10 @@ const Navbar = () => {
           <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10">
             <ul className="list-none m-0 p-2 bg-gray-100 text-sm">
               {!userData.isAccountVerified && (
-                <li className="py-1 px-2 hover:bg-gray-200 cursor-pointer">
+                <li
+                  onClick={sendVerificationOtp}
+                  className="py-1 px-2 hover:bg-gray-200 cursor-pointer"
+                >
                   Verify Email
                 </li>
               )}
