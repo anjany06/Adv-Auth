@@ -7,6 +7,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  //this will send cookies with request to the backend
+  axios.defaults.withCredentials = true;
   const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,8 +21,6 @@ const Login = () => {
     try {
       e.preventDefault();
 
-      //this will send cookies with request to the backend
-      axios.defaults.withCredentials = true;
       if (state === "Sign Up") {
         const { data } = await axios.post(backendUrl + "/api/auth/register", {
           email,
