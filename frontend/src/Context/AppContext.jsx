@@ -31,7 +31,7 @@ export const AppContextProvider = (props) => {
       const { data } = await axios.get(backendUrl + "/api/user/data");
       return data.userData; // Return the user data directly
     } catch (error) {
-      toast.error("Login Again");
+      toast.error("You are Logged out");
       return null; // Return null in case of an error
     }
   };

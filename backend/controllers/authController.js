@@ -192,7 +192,7 @@ export const sendResetOtp = async (req, res) => {
   try {
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.json({ success: false, message: error.message });
+      return res.json({ success: false, message: "User Not found" });
     }
 
     //creating a 6 six digit otp for verfication
@@ -246,7 +246,8 @@ export const resetPassword = async (req, res) => {
     await user.save();
     return res.json({
       success: true,
-      message: "password has been reset successfully",
+      message:
+        "password has been reset successfully (login again with new password)",
     });
   } catch (error) {
     return res.status(400).json({ success: false, message: error.message });
