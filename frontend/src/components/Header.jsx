@@ -3,8 +3,7 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
 
 const Header = () => {
-  const { getUserData, isLoggedin, userData, } =
-    useContext(AppContext);
+  const { getUserData, isLoggedin, userData } = useContext(AppContext);
   const [localUser, setLocalUser] = useState(null);
 
   useEffect(() => {
@@ -33,8 +32,8 @@ const Header = () => {
         Welcome to our app
       </h2>
       <p className="mb-8 max-w-md">
-        Let's start with a quick product tour and we will have you up and
-        running in no time
+        You can test this app by signing up or logging in using your original
+        email ID.
       </p>
       <button className="border border-gray-500 rounded-full px-8 py-2.5 hover:bg-gray-100 transition-all">
         Get Started
