@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://adv-auth-iota.vercel.app", // Allow your frontend origin
+    origin: process.env.FRONTEND_URL, // Allow your frontend origin
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     credentials: true, // Allow credentials if needed
   })
