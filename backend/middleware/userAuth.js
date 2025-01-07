@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import winston from "winston"; // Import winston for logging
+import winston from "winston";
 
 // Configure winston logger
 const logger = winston.createLogger({
@@ -11,8 +11,8 @@ const logger = winston.createLogger({
 });
 
 const userAuth = async (req, res, next) => {
-  const { token } = req.cookies; // Only declare token once
-  logger.info(`Received token: ${token}`); // Log the received token
+  const { token } = req.cookies; 
+  logger.info(`Received token: ${token}`);
 
   if (!token) {
     return res.status(401).json({ msg: "Not Authorised Login again" });
@@ -28,7 +28,7 @@ const userAuth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    logger.error(`Token verification error: ${error.message}`); // Log any verification errors
+    logger.error(`Token verification error: ${error.message}`); 
     res.json({ success: false, message: error.message });
   }
 };
