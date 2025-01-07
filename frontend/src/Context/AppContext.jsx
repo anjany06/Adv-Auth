@@ -41,7 +41,21 @@ export const AppContextProvider = (props) => {
       getAuthState();
     }
   }, []);
-
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/auth/is-auth`);
+        if (response.data.success) {
+          setIsLoggedin(true);
+        } else {
+          setIsLoggedin(false);
+        }
+      } catch (error) {
+        setIsLoggedin(false);
+      }
+    };
+    checkAuth();
+  }, [backendUrl]);
   const value = {
     backendUrl,
     isLoggedin,
