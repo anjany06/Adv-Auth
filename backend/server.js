@@ -11,13 +11,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL, // Allow your frontend origin
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-    credentials: true, // Allow credentials if needed
-  })
-);
+const corsOptions = {
+  origin: "http://localhost:5173", // Allow requests from this origin
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions)); // Use CORS middleware
 app.use(cookieParser());
 app.use(express.json()); //allows us to parse incoming requests: req.body
 
@@ -32,3 +31,4 @@ app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running on port: ${PORT}`);
 });
+

@@ -7,8 +7,8 @@ export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
   axios.defaults.withCredentials = true;
-  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const backendUrl = "https://adv-auth-backend.onrender.com";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = "https://adv-auth-backend.onrender.com";
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [userData, setUserData] = useState(false);
 
@@ -19,6 +19,7 @@ export const AppContextProvider = (props) => {
       });
       if (data.success) {
         setIsLoggedin(true);
+        console.log(isLoggedin);
         const userData = await getUserData();
         setUserData(userData);
       }
@@ -30,7 +31,12 @@ export const AppContextProvider = (props) => {
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/data");
-      return data.userData; // Return the user data directly
+      if (data.success) {
+        setUserData(data.userData);
+        console.log(userData);
+      } else {
+        console.log(data);
+      }
     } catch (error) {
       return null; // Return null in case of an error
     }
@@ -42,26 +48,12 @@ export const AppContextProvider = (props) => {
       getAuthState();
     }
   }, []);
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/api/auth/is-auth`);
-        if (response.data.success) {
-          setIsLoggedin(true);
-        } else {
-          setIsLoggedin(false);
-        }
-      } catch (error) {
-        setIsLoggedin(false);
-      }
-    };
-    checkAuth();
-  }, [backendUrl]);
   const value = {
     backendUrl,
     isLoggedin,
     setIsLoggedin,
     getUserData,
+    getAuthState,
     setUserData,
     userData, // Provide the entire user data object to the context
   };

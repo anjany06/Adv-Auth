@@ -6,17 +6,17 @@ const Header = () => {
   const { getUserData, isLoggedin, userData } = useContext(AppContext);
   const [localUser, setLocalUser] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (isLoggedin) {
-        const data = await getUserData();
-        setLocalUser(data);
-      } else {
-        setLocalUser(null);
-      }
-    };
-    fetchUserData();
-  }, [isLoggedin, getUserData]);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     if (isLoggedin) {
+  //       const data = await getUserData();
+  //       setLocalUser(data);
+  //     } else {
+  //       setLocalUser(null);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, [isLoggedin, getUserData]);
   return (
     <div className="flex flex-col items-center mt-20 px-4 text-center text-gray-800">
       <img
